@@ -49,8 +49,8 @@ export async function processWebsiteScan(scanId: string) {
       pagesScanned,
       pagesVisited,
     } = await crawlWebsite(input.url, {
-      maxPages: 3, // Very limited for Vercel Hobby timeout
-      maxDepth: 1,
+      maxPages: 50, // Render has 15 min timeout - plenty of time
+      maxDepth: 3,
       onProgress: async (progress) => {
         await prisma.scan.update({
           where: { id: scanId },
