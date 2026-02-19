@@ -200,7 +200,7 @@ export default function DashboardCharts({
                     <text 
                       x={x} 
                       y={y} 
-                      fill="white" 
+                      fill="#1f2937" 
                       textAnchor={x > cx ? 'start' : 'end'} 
                       dominantBaseline="central"
                       className="font-bold text-sm"
