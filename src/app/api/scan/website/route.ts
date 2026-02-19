@@ -53,16 +53,15 @@ export async function POST(request: Request) {
       select: { id: true, status: true, createdAt: true },
     });
 
-    if (process.env.NODE_ENV !== "production") {
-      setTimeout(() => {
-        processWebsiteScan(scan.id).catch(async (error) => {
-          await prisma.scan.update({
-            where: { id: scan.id },
-            data: { status: "FAILED", errorMessage: "Processing failed." },
-          });
+    // Process scan asynchronously
+    setTimeout(() => {
+      processWebsiteScan(scan.id).catch(async (error) => {
+        await prisma.scan.update({
+          where: { id: scan.id },
+          data: { status: "FAILED", errorMessage: "Processing failed." },
         });
-      }, 0);
-    }
+      });
+    }, 0);
 
     return NextResponse.json({
       scanId: scan.id,
