@@ -350,9 +350,9 @@ export default function DashboardPage() {
 
         {scanResult && (
           <>
-            <section className="mt-10">
-              <div className="flex flex-col gap-2">
-                <h2 className="text-lg font-semibold">
+            <section className="mt-12">
+              <div className="mb-6 flex flex-col gap-2">
+                <h2 className="text-2xl font-bold text-zinc-900">
                   Website Delivery Footprint
                 </h2>
                 <p className="text-sm text-zinc-600">
