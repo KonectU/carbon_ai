@@ -302,12 +302,12 @@ export default function ScanPage() {
                   <div className="relative h-20 w-20">
                     {/* Outer Ring */}
                     <svg className="absolute inset-0 h-20 w-20 animate-spin" style={{ animationDuration: '3s' }} fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" stroke="#10b981"></circle>
+                      <circle className="opacity-20" cx="12" cy="12" r="10" stroke="#10b981" strokeWidth="2"></circle>
                       <path className="opacity-90" fill="#10b981" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     {/* Inner Ring */}
                     <svg className="absolute inset-0 h-20 w-20 animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }} fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-30" cx="12" cy="12" r="7" stroke="currentColor" strokeWidth="2" stroke="#059669"></circle>
+                      <circle className="opacity-30" cx="12" cy="12" r="7" stroke="#059669" strokeWidth="2"></circle>
                     </svg>
                     {/* Center Icon */}
                     <div className="absolute inset-0 flex items-center justify-center">
