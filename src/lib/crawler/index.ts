@@ -14,16 +14,20 @@ type CrawlMetrics = {
   pagesVisited: string[];
 };
 
-// Detect if running on Vercel
-const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV !== undefined;
+// Detect if running on Vercel or Render (serverless environments)
+const isServerless = 
+  process.env.VERCEL === '1' || 
+  process.env.VERCEL_ENV !== undefined ||
+  process.env.RENDER === 'true' ||
+  process.env.RENDER_SERVICE_NAME !== undefined;
 
 export async function crawlWebsite(
   url: string,
   options?: CrawlOptions
 ): Promise<CrawlMetrics> {
-  if (isVercel) {
-    // Use simple crawler on Vercel (no Playwright)
-    console.log('🌐 Using Simple Crawler (Vercel environment)');
+  if (isServerless) {
+    // Use simple crawler on serverless platforms (no Playwright)
+    console.log('🌐 Using Simple Crawler (Serverless environment)');
     const { crawlWebsite: simpleCrawl } = await import('./simpleCrawler');
     return simpleCrawl(url, options);
   } else {
