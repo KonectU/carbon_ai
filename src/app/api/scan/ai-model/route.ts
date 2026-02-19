@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { prisma } from "@/lib/db/prisma";
 import { estimateAiInferenceEnergy } from "@/lib/analysis/aiModelAnalysis";
-import { checkScanQuota } from "@/lib/limits/scanLimits";
 
 type Precision = "fp32" | "fp16" | "int8";
 
@@ -64,17 +63,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
     }
 
-    const quota = await checkScanQuota(user.id);
-    if (!quota.allowed) {
-      return NextResponse.json(
-        {
-          error: "Monthly scan limit reached.",
-          limit: quota.limit,
-          remaining: quota.remaining,
-        },
-        { status: 429 }
-      );
-    }
+    // No limit check - unlimited scans for everyone!
 
     const resultJson = {
       energy_kWh: estimate.energy_kWh_per_month,

@@ -1,0 +1,11 @@
+{
+  "buildCommand": "prisma generate && next build",
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "NEXT_DISABLE_TURBOPACK": "1"
+  }
+}

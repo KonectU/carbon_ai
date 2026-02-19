@@ -1,77 +1,34 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function BillingPage() {
   const router = useRouter();
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [error, setError] = useState("");
 
-  const handleCheckout = async () => {
-    setStatus("loading");
-    setError("");
-
-    try {
-      const response = await fetch("/api/billing/checkout", { method: "POST" });
-      if (response.status === 401) {
-        router.push("/login");
-        return;
-      }
-      if (!response.ok) {
-        throw new Error("Checkout failed");
-      }
-      const payload = await response.json();
-      if (payload.url) {
-        window.location.href = payload.url;
-        return;
-      }
-      throw new Error("Missing checkout URL");
-    } catch (err) {
-      setStatus("error");
-      setError("We could not start billing checkout. Try again.");
-    }
-  };
+  useEffect(() => {
+    // Redirect to dashboard since everything is free now
+    router.push("/dashboard");
+  }, [router]);
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
-      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-16 sm:px-10">
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-zinc-500">
-            Billing
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Upgrade to Pro
-          </h1>
-          <p className="text-base text-zinc-600">
-            Unlock higher monthly scan limits for production use.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-white text-zinc-900 flex items-center justify-center">
+      <div className="text-center p-8">
+        <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 mb-6">
+          <svg className="h-10 w-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
         </div>
-
-        <div className="mt-10 rounded-2xl border border-zinc-200 bg-white p-6">
-          <div className="flex items-start justify-between gap-6">
-            <div>
-              <h2 className="text-lg font-semibold">Pro plan</h2>
-              <p className="mt-2 text-sm text-zinc-600">
-                50 scans per month across website and AI assessments.
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-semibold">$—</p>
-              <p className="text-xs text-zinc-500">per month</p>
-            </div>
-          </div>
-
-          <button
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-zinc-900 px-6 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-300"
-            onClick={handleCheckout}
-            disabled={status === "loading"}
-          >
-            {status === "loading" ? "Redirecting..." : "Start subscription"}
-          </button>
-          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        </div>
-      </main>
+        <h1 className="text-3xl font-bold text-zinc-900 mb-3">
+          Everything is Free! 🎉
+        </h1>
+        <p className="text-lg text-zinc-600 mb-6">
+          Unlimited scans for everyone. No payment required.
+        </p>
+        <p className="text-sm text-zinc-500">
+          Redirecting to dashboard...
+        </p>
+      </div>
     </div>
   );
 }

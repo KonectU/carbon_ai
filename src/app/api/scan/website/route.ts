@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import { prisma } from "@/lib/db/prisma";
-import { checkScanQuota } from "@/lib/limits/scanLimits";
 import { processWebsiteScan } from "@/lib/jobs/websiteScanProcessor";
 
 export async function POST(request: Request) {
@@ -39,17 +38,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
     }
 
-    const quota = await checkScanQuota(user.id);
-    if (!quota.allowed) {
-      return NextResponse.json(
-        {
-          error: "Monthly scan limit reached.",
-          limit: quota.limit,
-          remaining: quota.remaining,
-        },
-        { status: 429 }
-      );
-    }
+    // No limit check - unlimited scans for everyone!
 
     const scan = await prisma.scan.create({
       data: {

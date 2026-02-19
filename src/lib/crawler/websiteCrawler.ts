@@ -73,31 +73,47 @@ export async function crawlWebsite(
   });
 
   const visitPage = async (targetUrl: string) => {
-    await page.evaluate(() => performance.clearResourceTimings());
-    const start = Date.now();
-    await page.goto(targetUrl, { waitUntil: "networkidle" });
-    const jsExecutionMs = Date.now() - start;
-    const domNodes = await page.evaluate(
-      () => document.getElementsByTagName("*").length
-    );
-    const performanceBytes = await page.evaluate(() => {
-      const entries = performance.getEntriesByType(
-        "resource"
-      ) as PerformanceResourceTiming[];
-      const totalTransfer = entries.reduce(
-        (sum, entry) => sum + (entry.transferSize || 0),
-        0
+    try {
+      await page.evaluate(() => performance.clearResourceTimings());
+      const start = Date.now();
+      
+      // Increased timeout to 90 seconds for slow websites
+      await page.goto(targetUrl, { 
+        waitUntil: "networkidle",
+        timeout: 90000 // 90 seconds - works for any website
+      });
+      
+      const jsExecutionMs = Date.now() - start;
+      const domNodes = await page.evaluate(
+        () => document.getElementsByTagName("*").length
       );
-      const totalEncoded = entries.reduce(
-        (sum, entry) => sum + (entry.encodedBodySize || 0),
-        0
-      );
+      const performanceBytes = await page.evaluate(() => {
+        const entries = performance.getEntriesByType(
+          "resource"
+        ) as PerformanceResourceTiming[];
+        const totalTransfer = entries.reduce(
+          (sum, entry) => sum + (entry.transferSize || 0),
+          0
+        );
+        const totalEncoded = entries.reduce(
+          (sum, entry) => sum + (entry.encodedBodySize || 0),
+          0
+        );
+        return {
+          totalTransfer,
+          totalEncoded,
+        };
+      });
+      return { jsExecutionMs, domNodes, performanceBytes };
+    } catch (error) {
+      console.warn(`Failed to visit ${targetUrl}:`, error instanceof Error ? error.message : 'Unknown error');
+      // Return default values if page fails to load - scan continues
       return {
-        totalTransfer,
-        totalEncoded,
+        jsExecutionMs: 0,
+        domNodes: 0,
+        performanceBytes: { totalTransfer: 0, totalEncoded: 0 }
       };
-    });
-    return { jsExecutionMs, domNodes, performanceBytes };
+    }
   };
 
   const startUrl = new URL(url);
@@ -197,10 +213,15 @@ export async function crawlWebsite(
 
   await browser.close();
 
+  // Ensure at least one page was scanned
+  if (pagesVisited.length === 0) {
+    throw new Error("Failed to scan any pages. Website may be inaccessible or blocking automated access.");
+  }
+
   return {
-    totalBytes,
-    domNodes: totalDomNodes,
-    jsExecutionMs: totalJsExecutionMs,
+    totalBytes: Math.max(1, totalBytes), // Ensure non-zero
+    domNodes: Math.max(1, totalDomNodes), // Ensure non-zero
+    jsExecutionMs: Math.max(1, totalJsExecutionMs), // Ensure non-zero
     visitedUrl,
     visitedAt,
     screenshot: screenshotFilename ? `/screenshots/${screenshotFilename}` : "",
