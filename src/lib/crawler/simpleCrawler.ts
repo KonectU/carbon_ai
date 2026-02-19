@@ -75,11 +75,13 @@ export async function crawlWebsite(
         // Extract links if we haven't reached max depth
         if (depth < options.maxDepth && pagesVisited.length < options.maxPages) {
           const links = extractLinks(html, currentUrl, baseUrl.origin);
+          console.log(`[SimpleCrawler] Found ${links.length} links on ${currentUrl}`);
           for (const link of links) {
             if (!visitedUrls.has(link) && urlsToVisit.length < options.maxPages * 2) {
               urlsToVisit.push({ url: link, depth: depth + 1 });
             }
           }
+          console.log(`[SimpleCrawler] Queue size: ${urlsToVisit.length}, Visited: ${pagesVisited.length}`);
         }
 
         // Report progress
@@ -140,7 +142,9 @@ function extractLinks(html: string, currentUrl: string, baseOrigin: string): str
       if (absoluteUrl.origin === baseOrigin) {
         // Remove hash and query params for deduplication
         absoluteUrl.hash = '';
-        links.push(absoluteUrl.toString());
+        absoluteUrl.search = ''; // Remove query params too
+        const cleanUrl = absoluteUrl.toString();
+        links.push(cleanUrl);
       }
     } catch {
       // Skip invalid URLs
