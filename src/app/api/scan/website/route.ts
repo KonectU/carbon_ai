@@ -55,15 +55,17 @@ export async function POST(request: Request) {
       select: { id: true, status: true, createdAt: true },
     });
 
-    // Process scan asynchronously
-    setTimeout(() => {
-      processWebsiteScan(scan.id).catch(async (error) => {
-        await prisma.scan.update({
-          where: { id: scan.id },
-          data: { status: "FAILED", errorMessage: "Processing failed." },
-        });
+    // Process scan immediately (Vercel serverless)
+    processWebsiteScan(scan.id).catch(async (error) => {
+      console.error(`[Scan ${scan.id}] Processing error:`, error);
+      await prisma.scan.update({
+        where: { id: scan.id },
+        data: { 
+          status: "FAILED", 
+          errorMessage: error instanceof Error ? error.message : "Processing failed." 
+        },
       });
-    }, 0);
+    });
 
     return NextResponse.json({
       scanId: scan.id,
