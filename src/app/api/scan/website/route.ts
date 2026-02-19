@@ -4,6 +4,8 @@ import { authOptions } from "@/auth";
 import { prisma } from "@/lib/db/prisma";
 import { processWebsiteScan } from "@/lib/jobs/websiteScanProcessor";
 
+export const maxDuration = 60; // 60 seconds for Pro plan, 10 for Hobby
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
