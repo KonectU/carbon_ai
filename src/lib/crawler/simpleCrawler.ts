@@ -91,6 +91,9 @@ export async function crawlWebsite(
             pages: pagesVisited,
           });
         }
+
+        // Small delay to make progress visible (500ms per page)
+        await new Promise(resolve => setTimeout(resolve, 500));
       } catch (error) {
         // Skip failed pages and continue
         console.error(`Failed to fetch ${currentUrl}:`, error);
