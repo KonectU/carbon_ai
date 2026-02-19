@@ -191,6 +191,7 @@ export default function DashboardCharts({
                 label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
                   const RADIAN = Math.PI / 180;
                   const safeMidAngle = midAngle ?? 0;
+                  const safePercent = percent ?? 0;
                   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
                   const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
                   const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
@@ -205,7 +206,7 @@ export default function DashboardCharts({
                       className="font-bold text-sm"
                       style={{ fontSize: '16px', fontWeight: 'bold' }}
                     >
-                      {`${(percent * 100).toFixed(0)}%`}
+                      {`${(safePercent * 100).toFixed(0)}%`}
                     </text>
                   );
                 }}
