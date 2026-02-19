@@ -45,7 +45,7 @@ export function estimateAiInferenceEnergy({
     (effectiveFlopsPerInference * requestsPerSecond) / hardwareFlopsPerWatt;
   const energy_kWh_per_month = (watts * 24 * 30) / 1000;
   const carbonFactor =
-    (region && REGION_CARBON_KG_PER_KWH[region]) ?? GLOBAL_CARBON_KG_PER_KWH;
+    (region && REGION_CARBON_KG_PER_KWH[region]) || GLOBAL_CARBON_KG_PER_KWH;
   const carbon_kg_per_month = energy_kWh_per_month * carbonFactor;
 
   return {
