@@ -366,10 +366,10 @@ export default function DashboardPage() {
                     <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">
                       Proof of visit
                     </p>
-                    <p className="mt-1 text-sm text-zinc-700">
+                    <p className="mt-1 text-sm text-zinc-700 break-all">
                       {visitedUrl ? (
                         <a
-                          className="underline decoration-zinc-300 underline-offset-4"
+                          className="underline decoration-zinc-300 underline-offset-4 hover:text-emerald-600"
                           href={visitedUrl}
                           target="_blank"
                           rel="noreferrer"
@@ -399,7 +399,7 @@ export default function DashboardPage() {
                   </p>
                   <ul className="mt-2 space-y-1 text-xs text-zinc-600">
                     {pagesVisited.slice(0, 10).map((page) => (
-                      <li key={page}>{page.replace(/^https?:\/\//, "")}</li>
+                      <li key={page} className="break-all">{page.replace(/^https?:\/\//, "")}</li>
                     ))}
                   </ul>
                   {pagesVisited.length > 10 && (
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                       </summary>
                       <ul className="mt-2 space-y-1">
                         {pagesVisited.map((page) => (
-                          <li key={page}>
+                          <li key={page} className="break-all">
                             {page.replace(/^https?:\/\//, "")}
                           </li>
                         ))}
