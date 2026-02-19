@@ -54,7 +54,7 @@ export async function crawlWebsite(
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; CarbonAI-Scanner/1.0)',
           },
-          signal: AbortSignal.timeout(10000), // 10 second timeout per page
+          signal: AbortSignal.timeout(5000), // 5 second timeout per page
         });
 
         if (!response.ok) {
