@@ -156,7 +156,7 @@ export default function AIAnalysisSection({
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
-                  formatter={(value: number) => value.toFixed(6)}
+                  formatter={(value: number | undefined) => value?.toFixed(6) ?? '0'}
                 />
                 <Area type="monotone" dataKey="carbon" stackId="1" stroke="#10b981" fill="#10b981" fillOpacity={0.6} name="Carbon (kg)" />
                 <Area type="monotone" dataKey="energy" stackId="2" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.4} name="Energy (kWh)" />
